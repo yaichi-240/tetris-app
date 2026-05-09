@@ -18,6 +18,7 @@ let lastTime = 0;
 let dropAccum = 0;
 let paused = false;
 let softDropping = false;
+let gameRunning = false;
 
 // ===== 初期化 =====
 function initGame(diff) {
@@ -46,6 +47,7 @@ function initGame(diff) {
     pause:     togglePause,
   });
   input.enable();
+  gameRunning = true;
 
   showScreen('game');
   rafId = requestAnimationFrame(loop);
@@ -53,7 +55,7 @@ function initGame(diff) {
 
 // ===== ゲームループ =====
 function loop(timestamp) {
-  if (paused) return;
+  if (!gameRunning || paused) return;
   const delta = timestamp - lastTime;
   lastTime = timestamp;
 
@@ -147,6 +149,7 @@ function togglePause() {
 
 // ===== ゲームオーバー =====
 function gameOver() {
+  gameRunning = false;
   cancelAnimationFrame(rafId);
   input.disable();
   board.render(null);
