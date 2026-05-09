@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Tetris</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- タイトル画面 -->
+  <div id="screen-title" class="screen active">
+    <div class="title-container">
+      <h1 class="game-title">TETRIS</h1>
+      <p class="subtitle">難易度を選択してください</p>
+      <div class="difficulty-buttons">
+        <button class="btn btn-easy"   data-difficulty="easy">EASY</button>
+        <button class="btn btn-normal" data-difficulty="normal">NORMAL</button>
+        <button class="btn btn-hard"   data-difficulty="hard">HARD</button>
+      </div>
+      <div id="title-highscores" class="title-highscores"></div>
+    </div>
+  </div>
+
+  <!-- ゲーム画面 -->
+  <div id="screen-game" class="screen">
+    <div class="game-layout">
+
+      <!-- 左サイドバー -->
+      <div class="sidebar sidebar-left">
+        <div class="info-block">
+          <div class="info-label">SCORE</div>
+          <div class="info-value" id="score">0</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">LEVEL</div>
+          <div class="info-value" id="level">1</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">LINES</div>
+          <div class="info-value" id="lines">0</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">BEST</div>
+          <div class="info-value" id="hiscore">0</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">MODE</div>
+          <div class="info-value" id="mode-label">-</div>
+        </div>
+        <button class="btn btn-sm" id="btn-pause">PAUSE</button>
+      </div>
+
+      <!-- ゲームボード -->
+      <div class="board-wrapper">
+        <div id="board"></div>
+      </div>
+
+      <!-- 右サイドバー -->
+      <div class="sidebar sidebar-right">
+        <div class="info-block">
+          <div class="info-label">NEXT</div>
+          <div id="next-piece"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- タッチ操作ボタン -->
+    <div class="touch-controls">
+      <div class="touch-row">
+        <button class="touch-btn" id="btn-left">&#9664;</button>
+        <button class="touch-btn" id="btn-rotate">&#8635;</button>
+        <button class="touch-btn" id="btn-right">&#9654;</button>
+      </div>
+      <div class="touch-row">
+        <button class="touch-btn touch-wide" id="btn-soft">&#9660; SOFT</button>
+        <button class="touch-btn touch-wide" id="btn-hard">&#9660;&#9660; HARD</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ポーズ画面 -->
+  <div id="screen-pause" class="screen overlay">
+    <div class="overlay-box">
+      <h2>PAUSE</h2>
+      <button class="btn" id="btn-resume">RESUME</button>
+      <button class="btn btn-sub" id="btn-quit-pause">QUIT</button>
+    </div>
+  </div>
+
+  <!-- ゲームオーバー画面 -->
+  <div id="screen-gameover" class="screen overlay">
+    <div class="overlay-box">
+      <h2>GAME OVER</h2>
+      <div class="result-score">
+        <div class="info-label">SCORE</div>
+        <div class="info-value" id="final-score">0</div>
+      </div>
+      <div id="rank-message" class="rank-message"></div>
+      <div id="gameover-highscores" class="go-highscores"></div>
+      <button class="btn" id="btn-retry">RETRY</button>
+      <button class="btn btn-sub" id="btn-title">TITLE</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/tetromino.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/score.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
