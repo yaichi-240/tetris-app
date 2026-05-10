@@ -16,6 +16,12 @@ class ScoreManager {
     this._updateDOM();
   }
 
+  addDropScore(cells, isHard) {
+    if (!cells) return;
+    this.score += cells * (isHard ? HARD_DROP_SCORE : SOFT_DROP_SCORE);
+    this._updateDOM();
+  }
+
   dropInterval() {
     const cfg = DIFFICULTIES[this.difficulty];
     const interval = cfg.dropInterval - (this.level - 1) * cfg.speedIncrease;

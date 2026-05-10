@@ -29,6 +29,9 @@ class InputHandler {
       case 'ArrowDown':  e.preventDefault(); this._cb.softDrop();   this._startDAS('down',  this._cb.softDrop);  break;
       case 'ArrowUp':    e.preventDefault(); this._cb.rotate();     break;
       case ' ':          e.preventDefault(); this._cb.hardDrop();   break;
+      case 'Shift':
+      case 'c':
+      case 'C':          e.preventDefault(); this._cb.hold();       break;
       case 'Escape':     this._cb.pause();   break;
     }
   }
@@ -61,6 +64,7 @@ class InputHandler {
       'btn-left':   () => this._active && this._cb.moveLeft(),
       'btn-right':  () => this._active && this._cb.moveRight(),
       'btn-rotate': () => this._active && this._cb.rotate(),
+      'btn-hold':   () => this._active && this._cb.hold(),
       'btn-soft':   () => this._active && this._cb.softDrop(),
       'btn-hard':   () => this._active && this._cb.hardDrop(),
     };

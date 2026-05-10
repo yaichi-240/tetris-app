@@ -134,6 +134,7 @@ body {
 
 .cell.filled { border-color: rgba(255,255,255,0.55); }
 .cell.ghost  { background: var(--color-ghost) !important; border-color: transparent; }
+.cell.flash  { background: #fff !important; border-color: transparent; transition: background 0.15s; }
 
 .cell.cyan   { background: var(--color-cyan); }
 .cell.yellow { background: var(--color-yellow); }

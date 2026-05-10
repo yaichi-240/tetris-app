@@ -11,7 +11,7 @@ function showScreen(name) {
 }
 
 // ===== ゲーム状態 =====
-let board, scoreManager, bag, currentPiece, nextPiece, input;
+let board, scoreManager, bag, currentPiece, nextPiece, holdPiece, input;
 let difficulty = 'normal';
 let rafId = null;
 let lastTime = 0;
@@ -19,6 +19,7 @@ let dropAccum = 0;
 let paused = false;
 let softDropping = false;
 let gameRunning = false;
+let holdUsed = false;
 
 // ===== 初期化 =====
 function initGame(diff) {
@@ -28,6 +29,8 @@ function initGame(diff) {
   bag = new PieceBag();
   currentPiece = bag.next();
   nextPiece = bag.next();
+  holdPiece = null;
+  holdUsed = false;
   paused = false;
   softDropping = false;
   dropAccum = 0;
@@ -36,6 +39,7 @@ function initGame(diff) {
   document.getElementById('mode-label').textContent = DIFFICULTIES[difficulty].label;
   scoreManager.updateDOM();
   board.renderNext(nextPiece);
+  board.renderHold(null);
 
   if (input) input.destroy();
   input = new InputHandler({
@@ -44,6 +48,7 @@ function initGame(diff) {
     softDrop:  () => { softDropping = true; move(0, 1); },
     hardDrop:  hardDrop,
     rotate:    rotatePiece,
+    hold:      holdCurrentPiece,
     pause:     togglePause,
   });
   input.enable();
@@ -83,6 +88,7 @@ function move(dx, dy) {
   if (board.isValid(moved)) {
     currentPiece.x = moved.x;
     currentPiece.y = moved.y;
+    if (dy > 0) scoreManager.addDropScore(1, false);
     board.render(currentPiece);
   }
 }
@@ -104,7 +110,10 @@ function rotatePiece() {
 }
 
 function hardDrop() {
-  currentPiece.y = board.ghostY(currentPiece);
+  const ghostY = board.ghostY(currentPiece);
+  const cells = Math.max(0, ghostY - currentPiece.y);
+  currentPiece.y = ghostY;
+  scoreManager.addDropScore(cells, true);
   lockAndNext();
 }
 
@@ -125,10 +134,34 @@ function lockAndNext() {
   const cleared = board.clearLines();
   scoreManager.addLines(cleared);
 
+  holdUsed = false;
   currentPiece = nextPiece;
   nextPiece = bag.next();
   board.renderNext(nextPiece);
 
+  if (!board.isValid(currentPiece)) { gameOver(); return; }
+  board.render(currentPiece);
+}
+
+// ===== ホールド =====
+function holdCurrentPiece() {
+  if (holdUsed) return;
+  holdUsed = true;
+
+  if (holdPiece) {
+    const temp = holdPiece;
+    holdPiece = new Tetromino(currentPiece.type);
+    currentPiece = temp;
+    currentPiece.x = Math.floor((BOARD_COLS - currentPiece.shape[0].length) / 2);
+    currentPiece.y = 0;
+  } else {
+    holdPiece = new Tetromino(currentPiece.type);
+    currentPiece = nextPiece;
+    nextPiece = bag.next();
+    board.renderNext(nextPiece);
+  }
+
+  board.renderHold(holdPiece);
   if (!board.isValid(currentPiece)) { gameOver(); return; }
   board.render(currentPiece);
 }
