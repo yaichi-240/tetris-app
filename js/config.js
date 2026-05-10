@@ -18,6 +18,8 @@ const TETROMINOES = {
 };
 
 const SCORE_TABLE = { 1: 100, 2: 300, 3: 500, 4: 800 };
+const SOFT_DROP_SCORE = 1;  // per cell
+const HARD_DROP_SCORE = 2;  // per cell
 const LEVEL_UP_LINES = 10;
 const MIN_INTERVAL = 50;
 const HIGH_SCORE_KEY_PREFIX = 'tetris_highscores_';

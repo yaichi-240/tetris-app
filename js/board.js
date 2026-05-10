@@ -56,16 +56,30 @@ class Board {
   }
 
   clearLines() {
-    let cleared = 0;
+    const clearedRows = [];
     for (let r = BOARD_ROWS - 1; r >= 0; r--) {
       if (this.grid[r].every(c => c !== null)) {
+        clearedRows.push(r);
         this.grid.splice(r, 1);
         this.grid.unshift(Array(BOARD_COLS).fill(null));
-        cleared++;
         r++;
       }
     }
-    return cleared;
+    if (clearedRows.length) {
+      this._flashRows(clearedRows);
+    }
+    return clearedRows.length;
+  }
+
+  _flashRows(rows) {
+    rows.forEach(r => {
+      if (r < 0 || r >= this._cells.length) return;
+      this._cells[r].forEach(cell => {
+        clearTimeout(cell._flashTimer);
+        cell.classList.add('flash');
+        cell._flashTimer = setTimeout(() => cell.classList.remove('flash'), 150);
+      });
+    });
   }
 
   ghostY(piece) {
@@ -118,7 +132,26 @@ class Board {
   }
 
   renderNext(piece) {
-    const el = document.getElementById('next-piece');
+    this._renderMiniPiece('next-piece', piece);
+  }
+
+  renderHold(piece) {
+    this._renderMiniPiece('hold-piece', piece);
+  }
+
+  _renderMiniPiece(elementId, piece) {
+    const el = document.getElementById(elementId);
+    if (!piece) {
+      el.style.gridTemplateColumns = 'repeat(4, 16px)';
+      el.style.gridTemplateRows    = 'repeat(2, 16px)';
+      el.innerHTML = '';
+      for (let i = 0; i < 8; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'next-cell';
+        el.appendChild(cell);
+      }
+      return;
+    }
     const rows = piece.shape.length;
     const cols = piece.shape[0].length;
     el.style.gridTemplateColumns = `repeat(${cols}, 16px)`;
